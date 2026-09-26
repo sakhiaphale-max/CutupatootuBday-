@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Pinkipie 🥹</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{
+  --ink:#3a1c1c;
+  --cream:#f2e8d5;
+  --cream2:#e9dcbf;
+  --red:#7c2b2b;
+  --red-deep:#4d1717;
+  --gold:#b8934a;
+  --wash:#a85a45;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  font-family:Georgia,'Times New Roman',serif;
+  background:radial-gradient(ellipse at top,#e6d8b8,#cdb98c 70%);
+  color:var(--ink);
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden;
+}
+.stage{
+  width:100%;
+  max-width:480px;
+  padding:24px 18px;
+  position:relative;
+  perspective:1600px;
+}
+
+/* ---------- ENVELOPE SCENE ---------- */
+#envelope-scene{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:80vh;
+  text-align:center;
+  transform-style:preserve-3d;
+  perspective:1400px;
+  transition:opacity .38s ease, transform .55s cubic-bezier(.2,.8,.15,1), filter .45s ease;
+}
+#envelope-scene.fading{
+  opacity:0;
+  transform:perspective(1400px) translateY(-24px) rotateX(7deg) rotateY(-3deg) scale(.94);
+  filter:blur(1.5px);
+}
+.envelope{
+  width:260px;
+  height:170px;
+  position:relative;
+  cursor:pointer;
+  margin-bottom:28px;
+  filter:drop-shadow(0 16px 24px rgba(77,23,23,0.32));
+  transform:translateZ(0) rotateX(0deg) rotateY(0deg) scale(1);
+  transform-style:preserve-3d;
+  transition:transform .42s cubic-bezier(.2,.8,.2,1), filter .42s ease;
+}
+.envelope:hover{
+  transform:translateY(-3px) rotateX(2deg) rotateY(-1.5deg) scale(1.015);
+}
+.envelope:active{
+  transform:translateY(1px) rotateX(-1deg) scale(.985);
+}
+.env-body{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(160deg,var(--cream) 0%,var(--cream2) 100%);
+  border:1px solid var(--gold);
+  border-radius:4px;
+  transform:translateZ(2px);
+  box-shadow:inset 0 1px rgba(255,255,255,.45), inset 0 -10px 20px rgba(77,23,23,.06);
+}
+.env-flap{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:0;
+  border-left:130px solid transparent;
+  border-right:130px solid transparent;
+  border-top:95px solid var(--red);
+  transform-origin:50% 0%;
+  transform:rotateX(0deg) translateZ(5px);
+  transform-style:preserve-3d;
+  backface-visibility:hidden;
+  transition:transform .78s cubic-bezier(.16,.82,.18,1), filter .6s ease;
+  z-index:3;
+  filter:drop-shadow(0 5px 5px rgba(77,23,23,.16));
+}
+.envelope.open .env-flap{
+  transform:rotateX(178deg) translateZ(5px);
+  filter:drop-shadow(0 -2px 3px rgba(77,23,23,.10));
+}
+.env-seal{
+  position:absolute;
+  top:62px;left:50%;
+  transform:translate(-50%,0) scale(1);
+  width:38px;height:38px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--gold),#8a6a2c 80%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--cream);
+  z-index:4;
+  box-shadow:0 2px 4px rgba(0,0,0,.3);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.envelope.open .env-seal{opacity:0;transform:translate(-50%,0) scale(0.5);pointer-events:none;}
+.env-shadow-inner{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(160deg,#dfd0ab,#cbb888);
+  border-radius:4px;
+  z-index:1;
+}
+.env-letter-peek{
+  position:absolute;
+  left:14px;right:14px;
+  top:14px;
+  height:120px;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 25px, rgba(124,43,43,.07) 26px, transparent 27px),
+    var(--cream);
+  border:1px solid #d8c79c;
+  border-radius:2px;
+  z-index:2;
+  transform:translate3d(0,0,8px) rotateX(0deg);
+  transform-style:preserve-3d;
+  transition:transform .78s cubic-bezier(.16,.82,.18,1) .08s, box-shadow .65s ease .08s;
+}
+.envelope.open .env-letter-peek{
+  transform:translate3d(0,-72px,18px) rotateX(-4deg);
+  box-shadow:0 -10px 18px rgba(77,23,23,0.24);
+}
+.tap-hint{
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--red-deep);
+  opacity:.75;
+}
+.title-block{
+  font-size:15px;
+  letter-spacing:1px;
+  color:var(--red-deep);
+  margin-bottom:6px;
+}
+.title-block b{
+  display:block;
+  font-size:30px;
+  font-family:'Brush Script MT',cursive,Georgia,serif;
+  color:var(--red-deep);
+  margin:4px 0 2px;
+}
+
+/* ---------- BOOK SCENE ---------- */
+#book-scene{
+  display:none;
+  opacity:0;
+  transform:translateY(14px) scale(0.98);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.2,.8,.3,1);
+}
+#book-scene.active{
+  display:block;
+}
+#book-scene.shown{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.wave-frame{
+  position:relative;
+  border-radius:6px;
+  padding:2px;
+  background:linear-gradient(135deg,var(--gold),#8a6a2c);
+  box-shadow:0 18px 34px rgba(77,23,23,0.38);
+  perspective:1800px;
+  transform-style:preserve-3d;
+}
+.page-flip-wrap{
+  position:relative;
+  min-height:62vh;
+  border-radius:4px;
+  overflow:hidden;
+}
+.page{
+  background:
+    linear-gradient(to right, transparent 0 28px, rgba(124,43,43,.12) 28px 29px, transparent 29px),
+    repeating-linear-gradient(to bottom, transparent 0 27px, rgba(124,43,43,.12) 28px, transparent 29px),
+    linear-gradient(90deg, rgba(255,255,255,.22), transparent 18%, rgba(77,23,23,.035) 100%),
+    var(--cream);
+  border-radius:4px;
+  min-height:62vh;
+  padding:38px 26px 28px 48px;
+  position:relative;
+  overflow:hidden;
+  backface-visibility:hidden;
+  transform-style:preserve-3d;
+  transform-origin:left center;
+  will-change:transform;
+  box-shadow:0 2px 7px rgba(77,23,23,.10);
+}
+.page.incoming{
+  position:absolute;
+  inset:0;
+}
+.page::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(124,43,43,0.10), transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(124,43,43,0.14), transparent 45%);
+  pointer-events:none;
+}
+.page::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  right:0;
+  width:42px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.22) 48%, rgba(77,23,23,.10));
+  opacity:.35;
+  pointer-events:none;
+  transform:translateZ(1px);
+}
+.page-flip-wrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:4px;
+  pointer-events:none;
+  box-shadow:inset 0 0 16px rgba(77,23,23,.09);
+}
+.wave-deco{
+  position:absolute;
+  bottom:-10px; right:-10px;
+  width:150px; height:100px;
+  opacity:0.9;
+  pointer-events:none;
+}
+.wave-deco.top{
+  bottom:auto; top:-14px; left:-14px; right:auto;
+  transform:rotate(180deg);
+  opacity:0.55;
+}
+.page-num{
+  position:absolute;
+  bottom:12px; right:18px;
+  font-size:12px;
+  letter-spacing:2px;
+  color:var(--gold);
+  font-style:italic;
+}
+.page-head{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--red);
+  margin-bottom:16px;
+  position:relative;
+}
+.page-text{
+  font-size:16px;
+  line-height:1.75;
+  position:relative;
+  z-index:2;
+  color:var(--ink);
+  position:relative;
+  white-space:pre-line;
+  max-height:52vh;
+  overflow-y:auto;
+  padding-right:4px;
+}
+.page-text::-webkit-scrollbar{width:4px;}
+.page-text::-webkit-scrollbar-thumb{background:var(--wash);border-radius:2px;}
+
+.sign-off{
+  margin-top:14px;
+  font-family:'Brush Script MT',cursive,Georgia,serif;
+  font-size:19px;
+  color:var(--red-deep);
+  line-height:1.3;
+}
+
+.nav-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+  gap:10px;
+}
+.nav-btn{
+  border:1px solid var(--red-deep);
+  background:transparent;
+  color:var(--red-deep);
+  font-family:Georgia,serif;
+  font-size:14px;
+  letter-spacing:1px;
+  padding:10px 16px;
+  border-radius:3px;
+  cursor:pointer;
+  transition:background .25s ease,color .25s ease,transform .15s ease;
+}
+.nav-btn:disabled{opacity:.25;cursor:default;}
+.nav-btn:not(:disabled):active{background:var(--red-deep);color:var(--cream);transform:scale(0.96);}
+.dots{display:flex;gap:6px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#cbb888;transition:background .3s ease;}
+.dot.active{background:var(--red);}
+
+.save-row{
+  display:flex;
+  justify-content:center;
+  margin-top:12px;
+}
+.save-btn{
+  border:1px solid var(--gold);
+  background:rgba(242,232,213,.72);
+  color:var(--red-deep);
+  font-family:Georgia,serif;
+  font-size:12px;
+  letter-spacing:1px;
+  padding:8px 13px;
+  border-radius:3px;
+  cursor:pointer;
+  box-shadow:0 2px 7px rgba(77,23,23,.10);
+  transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.save-btn:active{
+  transform:translateY(1px) scale(.98);
+}
+.save-btn:hover{
+  background:var(--cream);
+  box-shadow:0 4px 10px rgba(77,23,23,.14);
+}
+
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div id="envelope-scene">
+    <div class="title-block">for<b>Pinkipie</b>on his 20th</div>
+    <div class="envelope" id="envelope" onclick="openEnvelope()">
+      <div class="env-shadow-inner"></div>
+      <div class="env-letter-peek"></div>
+      <div class="env-body"></div>
+      <div class="env-flap"></div>
+      <div class="env-seal">祝</div>
+    </div>
+    <div class="tap-hint">tap the envelope</div>
+  </div>
+
+  <div id="book-scene">
+    <div class="wave-frame">
+      <div class="page-flip-wrap" id="flipWrap">
+        <div class="page" id="pageBox">
+          <svg class="wave-deco top" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,100 C40,60 60,120 100,80 C140,40 160,100 200,70 L200,140 L0,140 Z" fill="#7c2b2b" opacity="0.45"/>
+          </svg>
+          <div class="page-head" id="pageHead">page one</div>
+          <div class="page-text" id="pageText"></div>
+          <svg class="wave-deco" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,90 C30,50 70,110 100,70 C140,30 170,90 200,60 L200,140 L0,140 Z" fill="#4d1717" opacity="0.35"/>
+            <path d="M0,110 C40,80 80,130 120,100 C150,80 180,110 200,95 L200,140 L0,140 Z" fill="#b8934a" opacity="0.25"/>
+          </svg>
+          <div class="page-num" id="pageNum">01 / 04</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" id="prevBtn" onclick="go(-1)">← prev</button>
+      <div class="dots" id="dots"></div>
+      <button class="nav-btn" id="nextBtn" onclick="go(1)">next →</button>
+    </div>
+    <div class="save-row">
+      <button class="save-btn" onclick="downloadLetter()">♡ save this letter</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const pages = [
+{
+  head:"page one · twenty",
+  text:`Hieeee babyyyyyy
+
+HAPPPIESSSSSTTT BIRTHDAYYYYYY TO YOU MWAHHH 😍😽😍🤗😽😍🤗😍😽🥹😘😛😘🥰😍🥹😘😛🥰 ONFGGGG BROS TWENTYYYYYYY 😛😛😛 I HOPE YOU HAVE THE BESTTTTT DAY EVER (I'll make sure u do 😘)
+
+Okay so I guess this is officially the first long para I write for you. A good one 😍 I mean, at least as of now it is. We'll never know if I write sth more before you get this one 🤷🏻‍♀️ ANWW
+
+By the time you read this, we'd have completed 7 FUCKING MONTHS together ONFGGGG 😭😭😭 HOW EVEN 😝 best 7 months of my life (and sm more to come :p)
+
+Like genuinely, how did this even happen tho 😭 It feels like just yesterday when we were both(???) moaning some other girl's name uk who 😭😭😭 and god knows why ⁉️ thank you Yana for cancelling the party 😝 ts highkey gave me my husband ongggg and I'm really glad everything played out the way it did.`
+},
+{
+  head:"page two · you",
+  text:`And honestly, I wouldn't have it any other way. You lowkirkuenly are the best thing that has ever happened to me 😭🫶🏻 my favorite person to text, my favorite person to annoy, my favorite person to just exist around. Somehow even the most boring, random days feel like something when I'm with you, and I don't even know how you do that (its the constant no no no mene pi nai hai and tabdak tabdak ghodoba) 🥹
+
+I love you so so so so sosososo much. And I feel like I can never say it enough, or even properly explain how much I actually love you.
+
+I love your smile, your hair, your eyes YOUR EYES OML. Our kids better have them 🥹 And the dimples too :3 Waah kya gore gore bacche honge 😝
+
+But more than all of that, I love how easy everything feels with you. I love that there's this balance between being in a relationship and being best friends. I can annoy you, be stupid with you, talk about absolutely nothing with you, and then somehow have the hardest conversations with you too.`
+},
+{
+  head:"page three · us",
+  text:`Udk how much relief it gives me to know I'm this sure of someone. And it's you, of course. I'm not scared of being myself around you, because you get me better than anyone. What more can you even ask for. It's just goated.
+
+Turning 20 is so peak tho imagine being a man and 19 so gay. ANW MY BABY IS GROWING UP 😭😝 . I already know you're going to be someone amazing (you already are tbh) and I'm just really happy I get to be around for it 🥹🫶🏻
+
+U SEE HOW SMART I AMMMMMM 🫪 I put all of this in a QR so only you can read it, AND YOU CAN READ IT ANYTIME 🥰 No need to hide any card (i mean technically u still have to but this is sm better). I mean, if u want, I'd even write you handwritten letters 🥺 Anything for my cutupatootuuu.`
+},
+{
+  head:"page four · always",
+  text:`I hope you love your gift too 🥹 I put a lot of thought into it oki, and you better cry and send me the tears in a bottle 🫪😽 (I DESIGNED THE TSHIRT FROM SCRATCH BTW 😝) (cry now)
+
+So happy birthday my most favorite human. 🥹🫶🏻 I hope this year gives you everything you deserve and more, and I hope you know I'm gonna be right here for all of it.
+
+I love youuuu sm. More than sm actually. There's no word big enough. ❤️
+
+Mwahhhhhh <3`,
+  isLast:true
+}
+];
+
+
+let idx = 0;
+let busy = false;
+let gesture = null;
+
+function openEnvelope(){
+  const env = document.getElementById('envelope');
+  env.classList.add('open');
+  const scene = document.getElementById('envelope-scene');
+  const book = document.getElementById('book-scene');
+  setTimeout(()=>scene.classList.add('fading'),610);
+  setTimeout(()=>{
+    scene.style.display='none';
+    book.classList.add('active');
+    render();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>book.classList.add('shown')));
+  },1150);
+}
+
+function renderContent(container,p){
+  container.querySelector('#pageHead').textContent=p.head;
+  const text=container.querySelector('#pageText');
+  text.textContent=p.text;
+  const num=container.querySelector('#pageNum');
+  num.textContent=String(pages.indexOf(p)+1).padStart(2,'0')+' / 0'+pages.length;
+  if(p.isLast){
+    const s=document.createElement('div');
+    s.className='sign-off';
+    s.textContent='love,\nchikuku 😝';
+    text.appendChild(s);
+  }
+}
+
+function render(){
+  const box=document.getElementById('pageBox');
+  renderContent(box,pages[idx]);
+  document.getElementById('prevBtn').disabled=idx===0;
+  document.getElementById('nextBtn').disabled=idx===pages.length-1;
+  document.getElementById('nextBtn').textContent=idx===pages.length-2?'last page →':'next →';
+  updateDots();
+  box.querySelector('.page-text').scrollTop=0;
+}
+
+function updateDots(){
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  pages.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===idx?' active':'');
+    dots.appendChild(d);
+  });
+}
+
+function makePage(p){
+  const el=document.createElement('div');
+  el.className='page incoming';
+  el.innerHTML=`
+    <svg class="wave-deco top" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,100 C40,60 60,120 100,80 C140,40 160,100 200,70 L200,140 L0,140 Z" fill="#7c2b2b" opacity=".45"/>
+    </svg>
+    <div class="page-head" id="pageHead"></div>
+    <div class="page-text" id="pageText"></div>
+    <svg class="wave-deco" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 C30,50 70,110 100,70 C140,30 170,90 200,60 L200,140 L0,140 Z" fill="#4d1717" opacity=".35"/>
+      <path d="M0,110 C40,80 80,130 120,100 C150,80 180,110 200,95 L200,140 L0,140 Z" fill="#b8934a" opacity=".25"/>
+    </svg>
+    <div class="page-num" id="pageNum"></div>`;
+  renderContent(el,p);
+  return el;
+}
+
+/* Button navigation */
+function go(dir){
+  if(busy) return;
+  const next=idx+dir;
+  if(next<0 || next>=pages.length) return;
+  animateFlip(dir, 0);
+}
+
+/*
+  A deliberately simple touch implementation:
+  the current page is rotated directly from the finger position.
+  This avoids relying on Pointer Events, which can behave inconsistently
+  when a local HTML file is opened on some phones/browsers.
+*/
+const wrap=document.getElementById('flipWrap');
+
+function getX(e){
+  if(e.touches && e.touches.length) return e.touches[0].clientX;
+  if(e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientX;
+  return e.clientX;
+}
+
+function startGesture(e){
+  if(busy || gesture) return;
+  if(e.type==='mousedown' && e.button!==0) return;
+
+  const x=getX(e);
+  const rect=wrap.getBoundingClientRect();
+
+  gesture={
+    startX:x,
+    lastX:x,
+    width:rect.width,
+    dir:0,
+    progress:0,
+    active:false
+  };
+}
+
+function moveGesture(e){
+  if(!gesture || busy) return;
+
+  const x=getX(e);
+  const dx=x-gesture.startX;
+
+  if(!gesture.active){
+    if(Math.abs(dx)<7) return;
+
+    if(Math.abs(dx)<12){
+      return;
+    }
+
+    gesture.dir=dx<0 ? 1 : -1;
+
+    if((gesture.dir===1 && idx===pages.length-1) ||
+       (gesture.dir===-1 && idx===0)){
+      gesture=null;
+      return;
+    }
+
+    gesture.active=true;
+    prepareDragFlip(gesture.dir);
+
+    e.preventDefault?.();
+  }
+
+  e.preventDefault?.();
+
+  const distance=Math.abs(dx);
+  gesture.progress=Math.max(0,Math.min(1,distance/(gesture.width*0.82)));
+  gesture.lastX=x;
+
+  updateDragFlip(gesture.progress,gesture.dir);
+}
+
+function endGesture(e){
+  if(!gesture) return;
+
+  const g=gesture;
+  gesture=null;
+
+  if(!g.active) return;
+
+  e.preventDefault?.();
+
+  if(g.progress>=0.32){
+    finishDragFlip(g.dir);
+  }else{
+    snapBackFlip();
+  }
+}
+
+function cancelGesture(){
+  if(!gesture) return;
+  if(gesture.active) snapBackFlip();
+  gesture=null;
+}
+
+function prepareDragFlip(dir){
+  const old=document.getElementById('pageBox');
+  const incoming=makePage(pages[idx+dir]);
+
+  old.style.transition='none';
+  incoming.style.transition='none';
+
+  if(dir===1){
+    old.style.transformOrigin='left center';
+    incoming.style.transformOrigin='right center';
+    old.style.transform='rotateY(0deg)';
+    incoming.style.transform='rotateY(180deg)';
+  }else{
+    old.style.transformOrigin='right center';
+    incoming.style.transformOrigin='left center';
+    old.style.transform='rotateY(0deg)';
+    incoming.style.transform='rotateY(-180deg)';
+  }
+
+  old.style.zIndex='2';
+  incoming.style.zIndex='3';
+  incoming.dataset.dragPage='true';
+
+  wrap.appendChild(incoming);
+}
+
+function updateDragFlip(progress,dir){
+  const old=document.getElementById('pageBox');
+  const incoming=wrap.querySelector('[data-drag-page="true"]');
+  if(!old || !incoming) return;
+
+  const angle=progress*180;
+
+  old.style.transform=dir===1
+    ? `rotateY(${-angle}deg)`
+    : `rotateY(${angle}deg)`;
+
+  incoming.style.transform=dir===1
+    ? `rotateY(${180-angle}deg)`
+    : `rotateY(${-180+angle}deg)`;
+
+  const shadow=Math.sin(progress*Math.PI)*24;
+  old.style.boxShadow=dir===1
+    ? `${-shadow}px 0 ${Math.max(5,shadow)}px rgba(45,18,18,.28)`
+    : `${shadow}px 0 ${Math.max(5,shadow)}px rgba(45,18,18,.28)`;
+
+  incoming.style.boxShadow=dir===1
+    ? `${shadow}px 0 18px rgba(45,18,18,.18)`
+    : `${-shadow}px 0 18px rgba(45,18,18,.18)`;
+}
+
+function finishDragFlip(dir){
+  busy=true;
+
+  const old=document.getElementById('pageBox');
+  const incoming=wrap.querySelector('[data-drag-page="true"]');
+  if(!old || !incoming){busy=false;return;}
+
+  const duration=420;
+  const easing='cubic-bezier(.18,.82,.2,1)';
+
+  old.style.transition=`transform ${duration}ms ${easing}, box-shadow ${duration}ms ease`;
+  incoming.style.transition=`transform ${duration}ms ${easing}, box-shadow ${duration}ms ease`;
+
+  old.style.transform=dir===1?'rotateY(-180deg)':'rotateY(180deg)';
+  incoming.style.transform='rotateY(0deg)';
+  old.style.boxShadow='none';
+  incoming.style.boxShadow='none';
+
+  setTimeout(()=>commitFlip(dir),duration+25);
+}
+
+function snapBackFlip(){
+  const old=document.getElementById('pageBox');
+  const incoming=wrap.querySelector('[data-drag-page="true"]');
+  if(!old || !incoming) return;
+
+  const duration=300;
+  const easing='cubic-bezier(.2,.9,.25,1)';
+
+  old.style.transition=`transform ${duration}ms ${easing}, box-shadow ${duration}ms ease`;
+  incoming.style.transition=`transform ${duration}ms ${easing}, box-shadow ${duration}ms ease`;
+
+  old.style.transform='rotateY(0deg)';
+  incoming.style.transform=incoming.style.transformOrigin.includes('right')
+    ? 'rotateY(180deg)'
+    : 'rotateY(-180deg)';
+
+  setTimeout(()=>{
+    incoming.remove();
+    old.style.transition='';
+    old.style.transform='';
+    old.style.transformOrigin='';
+    old.style.boxShadow='';
+  },duration+20);
+}
+
+function animateFlip(dir){
+  prepareDragFlip(dir);
+  const old=document.getElementById('pageBox');
+  const incoming=wrap.querySelector('[data-drag-page="true"]');
+  busy=true;
+
+  requestAnimationFrame(()=>{
+    old.style.transition='transform 650ms cubic-bezier(.2,.75,.2,1)';
+    incoming.style.transition='transform 650ms cubic-bezier(.2,.75,.2,1)';
+
+    old.style.transform=dir===1?'rotateY(-180deg)':'rotateY(180deg)';
+    incoming.style.transform='rotateY(0deg)';
+  });
+
+  setTimeout(()=>commitFlip(dir),680);
+}
+
+function commitFlip(dir){
+  const old=document.getElementById('pageBox');
+  const incoming=wrap.querySelector('[data-drag-page="true"]');
+  if(!old || !incoming){busy=false;return;}
+
+  old.remove();
+
+  incoming.classList.remove('incoming');
+  incoming.id='pageBox';
+  delete incoming.dataset.dragPage;
+
+  incoming.style.position='';
+  incoming.style.inset='';
+  incoming.style.transform='';
+  incoming.style.transition='';
+  incoming.style.transformOrigin='';
+  incoming.style.boxShadow='';
+  incoming.style.zIndex='';
+
+  idx+=dir;
+  render();
+  busy=false;
+}
+
+/* Touch: prevent the browser from interpreting the swipe as page scrolling. */
+wrap.addEventListener('touchstart',startGesture,{passive:false});
+wrap.addEventListener('touchmove',moveGesture,{passive:false});
+wrap.addEventListener('touchend',endGesture,{passive:false});
+wrap.addEventListener('touchcancel',cancelGesture,{passive:false});
+
+/* Mouse fallback for desktop testing. */
+wrap.addEventListener('mousedown',startGesture);
+window.addEventListener('mousemove',moveGesture);
+window.addEventListener('mouseup',endGesture);
+
+/* Prevent accidental image/text dragging. */
+wrap.addEventListener('dragstart',e=>e.preventDefault());
+
+render();
+
+
+function downloadLetter(){
+  const button = document.querySelector('.save-btn');
+  const original = button ? button.textContent : '';
+
+  try{
+    const fullHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([fullHTML], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'Pinkipie-birthday-letter.html';
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+
+    setTimeout(()=>{
+      link.remove();
+      URL.revokeObjectURL(url);
+    }, 1000);
+
+    if(button){
+      button.textContent = '✓ letter saved';
+      setTimeout(()=>button.textContent = original, 1600);
+    }
+  }catch(err){
+    // Fallback for browsers that do not allow Blob downloads.
+    const fullHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const dataURL = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHTML);
+    const link = document.createElement('a');
+
+    link.href = dataURL;
+    link.download = 'Pinkipie-birthday-letter.html';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    if(button){
+      button.textContent = '↗ save / open';
+      setTimeout(()=>button.textContent = original, 1800);
+    }
+  }
+}
+
+</script>
+</body>
+</html>
